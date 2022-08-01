@@ -24,7 +24,7 @@ class SettingsServiceProvider extends PackageServiceProvider
             ->hasCommand(SettingsCommand::class)
             ->sharesDataWithAllViews(Cache::rememberForever('settings', function () {
                 return Settings::all();
-            }),'settings');
+            }), 'settings');
     }
 
     public function register()
@@ -33,5 +33,4 @@ class SettingsServiceProvider extends PackageServiceProvider
             return new Settings();
         });
     }
-
 }
