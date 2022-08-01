@@ -1,13 +1,11 @@
 <?php
 
-namespace StillAlive\Settings;
-
+namespace Stillalive\Settings;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
-
 class Settings extends Model
 {
-    protected $cachePrefix = 'stillalive-settings';
+   protected $cachePrefix = 'stillalive-settings';
 
     public function set($key, $value = null)
     {

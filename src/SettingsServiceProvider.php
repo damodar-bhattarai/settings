@@ -1,36 +1,60 @@
 <?php
 
-namespace StillAlive\Settings;
+namespace Stillalive\Settings;
 
-use Illuminate\Support\Facades\Cache;
-use Spatie\LaravelPackageTools\Package;
-use Spatie\LaravelPackageTools\PackageServiceProvider;
-use StillAlive\Settings\Commands\SettingsCommand;
+use Illuminate\Support\ServiceProvider;
 
-class SettingsServiceProvider extends PackageServiceProvider
+class SettingsServiceProvider extends ServiceProvider
 {
-    public function configurePackage(Package $package): void
+    /**
+     * Bootstrap the application services.
+     */
+    public function boot()
     {
         /*
-         * This class is a Package Service Provider
-         *
-         * More info: https://github.com/spatie/laravel-package-tools
+         * Optional methods to load your package assets
          */
-        $package
-            ->name('settings')
-            ->hasConfigFile()
-            ->hasViews()
-            ->hasMigration('create_settings_table')
-            ->hasCommand(SettingsCommand::class)
-            ->sharesDataWithAllViews(Cache::rememberForever('settings', function () {
-                return Settings::all();
-            }), 'settings');
+        // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'settings');
+        // $this->loadViewsFrom(__DIR__.'/../resources/views', 'settings');
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        // $this->loadRoutesFrom(__DIR__.'/routes.php');
+
+        if ($this->app->runningInConsole()) {
+            // $this->publishes([
+            //     __DIR__.'/../config/config.php' => config_path('settings.php'),
+            // ], 'config');
+
+            // Publishing the views.
+            /*$this->publishes([
+                __DIR__.'/../resources/views' => resource_path('views/vendor/settings'),
+            ], 'views');*/
+
+            // Publishing assets.
+            /*$this->publishes([
+                __DIR__.'/../resources/assets' => public_path('vendor/settings'),
+            ], 'assets');*/
+
+            // Publishing the translation files.
+            /*$this->publishes([
+                __DIR__.'/../resources/lang' => resource_path('lang/vendor/settings'),
+            ], 'lang');*/
+
+            // Registering package commands.
+            // $this->commands([]);
+        }
     }
 
+    /**
+     * Register the application services.
+     */
     public function register()
     {
-        $this->app->bind('setting', function ($app) {
-            return new Settings();
+        // Automatically apply the package configuration
+        // $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'settings');
+
+        // Register the main class to use with the facade
+        $this->app->singleton('settings', function () {
+            return new Settings;
         });
     }
 }

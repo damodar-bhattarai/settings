@@ -1,13 +1,13 @@
 {
     "name": "stillalive/settings",
-    "description": "Package to store & retrive commonly used variables like company name, email, phone , etc",
+    "description": "Set settings on the fly",
     "keywords": [
-        "StillAlive",
-        "laravel",
+        "stillalive",
         "settings"
     ],
     "homepage": "https://github.com/stillalive/settings",
     "license": "MIT",
+    "type": "library",
     "authors": [
         {
             "name": "Damodar Bhattarai",
@@ -16,56 +16,39 @@
         }
     ],
     "require": {
-        "php": "^8.1",
-        "spatie/laravel-package-tools": "^1.9.2",
-        "illuminate/contracts": "^9.0"
+        "php": "^7.4|^8.0",
+        "illuminate/support": "^8.0"
     },
     "require-dev": {
-        "laravel/pint": "^1.0",
-        "nunomaduro/collision": "^6.0",
-        "nunomaduro/larastan": "^2.0.1",
-        "orchestra/testbench": "^7.0",
-        "pestphp/pest": "^1.21",
-        "pestphp/pest-plugin-laravel": "^1.1",
-        "phpstan/extension-installer": "^1.1",
-        "phpstan/phpstan-deprecation-rules": "^1.0",
-        "phpstan/phpstan-phpunit": "^1.0",
-        "phpunit/phpunit": "^9.5"
+        "orchestra/testbench": "^6.0",
+        "phpunit/phpunit": "^9.0"
     },
     "autoload": {
         "psr-4": {
-            "StillAlive\\Settings\\": "src",
-            "StillAlive\\Settings\\Database\\Factories\\": "database/factories"
+            "Stillalive\\Settings\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "StillAlive\\Settings\\Tests\\": "tests"
+            "Stillalive\\Settings\\Tests\\": "tests"
         }
     },
     "scripts": {
-        "analyse": "vendor/bin/phpstan analyse",
-        "test": "vendor/bin/pest",
-        "test-coverage": "vendor/bin/pest --coverage",
-        "format": "vendor/bin/pint"
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+
     },
     "config": {
-        "sort-packages": true,
-        "allow-plugins": {
-            "pestphp/pest-plugin": true,
-            "phpstan/extension-installer": true
-        }
+        "sort-packages": true
     },
     "extra": {
         "laravel": {
             "providers": [
-                "StillAlive\\Settings\\SettingsServiceProvider"
+                "Stillalive\\Settings\\SettingsServiceProvider"
             ],
             "aliases": {
-                "Settings": "StillAlive\\Settings\\Facades\\Settings"
+                "Settings": "Stillalive\\Settings\\SettingsFacade"
             }
         }
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    }
 }
