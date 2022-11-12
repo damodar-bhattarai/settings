@@ -1,25 +1,27 @@
 {
-    "name": "stillalive/settings",
+    "name": "damodar-bhattarai/settings",
     "description": "Package to store and get general website settings on the fly.",
     "type": "library",
     "require": {
-        "php": ">=7.2",
-        "illuminate/support": "^7.0"
+        "php": ">=7.2"
     },
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Stillalive\\Settings\\": "src/"
+            "DamodarBhattarai\\Settings\\": "src"
         },
         "files": [
-            "src/Helpers/helpers.php"
+            "src/Helpers/settingsHelper.php"
         ]
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Stillalive\\Settings\\SettingsServiceProvider"
-            ]
+                "DamodarBhattarai\\Settings\\SettingsServiceProvider"
+            ],
+            "aliases": {
+                "Setting": "DamodarBhattarai\\Settings\\Facades\\Setting"
+            }
         }
     },
     "authors": [
