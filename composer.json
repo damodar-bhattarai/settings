@@ -2,9 +2,6 @@
     "name": "damodar-bhattarai/settings",
     "description": "Package to store and get general website settings on the fly.",
     "type": "library",
-    "require": {
-        "php": ">=7.2"
-    },
     "license": "MIT",
     "autoload": {
         "psr-4": {
