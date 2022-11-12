@@ -1,54 +1,32 @@
 {
     "name": "stillalive/settings",
-    "description": "Set settings on the fly",
-    "keywords": [
-        "stillalive",
-        "settings"
-    ],
-    "homepage": "https://github.com/stillalive/settings",
-    "license": "MIT",
+    "description": "Package to store and get general website settings on the fly.",
     "type": "library",
-    "authors": [
-        {
-            "name": "Damodar Bhattarai",
-            "email": "info@bdamodar.com.np",
-            "role": "Developer"
-        }
-    ],
     "require": {
-        "php": "^7.4|^8.0",
-        "illuminate/support": "^8.0"
+        "php": ">=7.2",
+        "illuminate/support": "^7.0"
     },
-    "require-dev": {
-        "orchestra/testbench": "^6.0",
-        "phpunit/phpunit": "^9.0"
-    },
+    "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Stillalive\\Settings\\": "src"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Stillalive\\Settings\\Tests\\": "tests"
-        }
-    },
-    "scripts": {
-        "test": "vendor/bin/phpunit",
-        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
-
-    },
-    "config": {
-        "sort-packages": true
+            "Stillalive\\Settings\\": "src/"
+        },
+        "files": [
+            "src/Helpers/helpers.php"
+        ]
     },
     "extra": {
         "laravel": {
             "providers": [
                 "Stillalive\\Settings\\SettingsServiceProvider"
-            ],
-            "aliases": {
-                "Settings": "Stillalive\\Settings\\SettingsFacade"
-            }
+            ]
         }
-    }
+    },
+    "authors": [
+        {
+            "name": "Damodar Bhattarai",
+            "email": "damodar.bhattarai.1999@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev"
 }

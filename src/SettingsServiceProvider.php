@@ -1,60 +1,39 @@
 <?php
 
-namespace Stillalive\Settings;
+namespace StillAlive\Settings;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Cache;
+use StillAlive\Settings\Models\Setting;
 
 class SettingsServiceProvider extends ServiceProvider
 {
-    /**
-     * Bootstrap the application services.
-     */
     public function boot()
     {
-        /*
-         * Optional methods to load your package assets
-         */
-        // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'settings');
-        // $this->loadViewsFrom(__DIR__.'/../resources/views', 'settings');
-        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-        // $this->loadRoutesFrom(__DIR__.'/routes.php');
+        if(!Cache::has('stillalive-settings')){
+            Cache::rememberForever('stillalive-settings', function () {
+                return Setting::all();
+            });
+        }
 
+        $this->publishMigrations();
+    }
+
+    protected function publishMigrations()
+    {
         if ($this->app->runningInConsole()) {
-            // $this->publishes([
-            //     __DIR__.'/../config/config.php' => config_path('settings.php'),
-            // ], 'config');
-
-            // Publishing the views.
-            /*$this->publishes([
-                __DIR__.'/../resources/views' => resource_path('views/vendor/settings'),
-            ], 'views');*/
-
-            // Publishing assets.
-            /*$this->publishes([
-                __DIR__.'/../resources/assets' => public_path('vendor/settings'),
-            ], 'assets');*/
-
-            // Publishing the translation files.
-            /*$this->publishes([
-                __DIR__.'/../resources/lang' => resource_path('lang/vendor/settings'),
-            ], 'lang');*/
-
-            // Registering package commands.
-            // $this->commands([]);
+            if (!class_exists('CreateAppSettingsTable')) {
+                $this->publishes([
+                    __DIR__ . '/../database/migrations/create_settings_table.php.stub' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_settings_table.php'),
+                    __DIR__ . '/../database/seeders/SettingsSeeder.php.stub' => database_path('migrations/seeders/SettingsSeeder.php'),
+                ], 'migrations');
+            }
         }
     }
 
-    /**
-     * Register the application services.
-     */
     public function register()
     {
-        // Automatically apply the package configuration
-        // $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'settings');
-
-        // Register the main class to use with the facade
-        $this->app->singleton('settings', function () {
-            return new Settings;
-        });
+        // load migrations
+        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
     }
 }
