@@ -13,12 +13,12 @@ You can also get fresh values from the database directly if you need.
 Install the package via composer
 
 ```bash
-  composer require stillalive/settings
+composer require damodar-bhattarai/settings
 ```
 
 Publish the migrations using the following command
 ```bash
-php artisan vendor:publish --provider="StillAlive\Settings\SettingServiceProvider" --tag="migrations"
+php artisan vendor:publish --provider="DamodarBhattarai\Settings\SettingServiceProvider"
 ```
 I have also added seeder for some general settings a website needs.
 Seed the database using command:
@@ -28,34 +28,44 @@ php artisan db:seed --class=SettingsSeeder
 ## Usage/Examples
 
 To store settings on database
-```javascript
-set_settings('key','value');    
+```code
+settings()->set('key','value'); 
 ```
 
 You can also set multiple settings at once
 
 ```code
-set_settings([
+settings()->set([
         'key1'=>'value1',
         'key2'=>'value2',
         'key3'=>'value3'
     ]);
 ```
 
-You can retrive the settings from cache
+You can retrieve the settings from cache using any command below
 
 ```code
 settings('key');
+
+settings()->get('key');
 ```
 
-You can provide default value to key if that key doesn't exists
+You can provide default value to key if that key doesn't exist
 ```code
-settings('key','default');
+settings('key','default');  //returns default
+settings()->get('key','default');  //returns default
+
 ```
 
-Want the settings direcly from database? You can do it,
+Want the settings directly from database? You can do it,
 ```code
 settings('key','default',true);
+settings()->get('key','default',true);
+```
+
+Getting all the settings stored on database
+```code
+settings()->getAll();
 ```
 
 Lets see some examples:
@@ -63,7 +73,7 @@ Lets see some examples:
 set "site_name" as "StillAlive"
 
 ```code
-set_settings('site_name','StillAlive');
+settings()->set('site_name','StillAlive');
 ```
 
 get "site_name" value
@@ -74,7 +84,7 @@ settings('site_name'); //outputs StillAlive
 
 set multiple settings
 ```code
-set_settings([
+settings()->set([
     'site_name'=>'StillAlive',
     'email'=>'info@bdamodar.com.np'
     'footer_text'=>'Copyright &copy;',
@@ -82,22 +92,22 @@ set_settings([
 ```
 
 You can use the settings on blade as
-```c
+```code
 {{ settings('site_name') }}
 {{ settings('site_name','default value' )}}
 
 ```
 Or, if you have html stored on settings
 
-```c
+```code
 {!! settings('footer_text') !!}
 {!! settings('footer_text',Copyright Date('Y')) !!}
 ```
 
 
-Finally If you have changed something directly on database, Don't forget to clear the cache.
+Finally, If you have changed something directly on database, Don't forget to clear the cache.
 
-```c
+```code
 php artisan cache:clear 
 ```
 
@@ -108,7 +118,7 @@ php artisan cache:clear
 
 ## Feedback
 
-If you have any feedback, please reach out at info@bdamodar.com.np or submit a pull request here.
+If you have any feedback, please reach out at damodar.bhattarai.1999@gmail.com or submit a pull request here.
 
 
 ## Authors
