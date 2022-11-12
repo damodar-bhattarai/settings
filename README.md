@@ -18,7 +18,7 @@ composer require damodar-bhattarai/settings
 
 Publish the migrations using the following command
 ```bash
-php artisan vendor:publish --provider="DamodarBhattarai\Settings\SettingServiceProvider"
+php artisan vendor:publish --provider="DamodarBhattarai\Settings\SettingsServiceProvider"
 ```
 I have also added seeder for some general settings a website needs.
 Seed the database using command:
