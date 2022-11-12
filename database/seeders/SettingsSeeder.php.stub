@@ -21,7 +21,7 @@ class SettingsSeeder extends Seeder
             'header_logo' => '',
             'footer_logo' => '',
             'site_favicon' => '',
-            'primary_email' => 'primary@gmail.com',
+            'primary_email' => 'damodar.bhattarai.1999@gmail.com',
             'secondary_email' => '',
             'primary_phone' => '9825710275',
             'secondary_phone' => '',
@@ -35,8 +35,7 @@ class SettingsSeeder extends Seeder
             'google_tag_manager' => '',
         ];
 
-        foreach($settings as $key=>$value){
-            Setting::firstOrCreate(['key'=>$key],['value'=>$value]);
-        }
+        settings()->set($settings);
+
     }
 }
