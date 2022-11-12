@@ -20,6 +20,10 @@ Publish the migrations using the following command
 ```bash
 php artisan vendor:publish --provider="DamodarBhattarai\Settings\SettingsServiceProvider"
 ```
+Migrate the database
+```bash
+php artisan migrate
+```
 I have also added seeder for some general settings a website needs.
 Seed the database using command:
 ```code

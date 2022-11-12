@@ -13,12 +13,23 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('settings', function (Blueprint $table) {
+
+    if (Schema::hasTable('settings')) {
+        $this->warn('The table named settings already exists. If you want to continue, you must drop the table first or rename the table.');
+        if ($this->confirm('Do you wish to continue?')) {
+          Schema::dropIfExists('settings');
+        }else{
+        $this->warn('Change the name of the table in the migration file, replaced changed table name on Setting Model and run the migration again.');
+            return;
+        }
+    }
+         Schema::create('settings', function (Blueprint $table) {
             $table->id();
             $table->string('key')->unique();
             $table->text('value')->nullable();
             $table->timestamps();
         });
+
     }
 
     /**
