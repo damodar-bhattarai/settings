@@ -109,6 +109,23 @@ Or, if you have html stored on settings
 ```
 
 
+## New on v1.0.1
+- added short_text() helper
+short_text eliminates all the html entities including <br> so you get clean text from the html provided.
+
+short_text($text, $length = 30, $read_more = false, $link = false, $style = '')
+where,
+$text is html (like from rich text editors)
+$length is character limit
+$read_more is boolean which helps to show or hide read more link
+$link is the link to the above read_more link
+$style can be used to add styles and classes like ($style='style="color:blue;" class="font-weight-bold"';)
+
+##example
+```code 
+{{short_text($post->description,100,true,route('post.show',$post->id),'class="text-red-500"')}}
+```
+
 Finally, If you have changed something directly on database, Don't forget to clear the cache.
 
 ```code
