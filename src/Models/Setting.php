@@ -16,11 +16,13 @@ class Setting extends Model
             foreach ($key as $k => $v) {
                 $this->set($k, $v);
             }
+
             return true;
         }
 
         $settings = $this->getModelName()->updateOrCreate(['key' => $key], ['value' => $value]);
         $this->forgetCache();
+
         return $settings;
     }
 
@@ -44,6 +46,7 @@ class Setting extends Model
         if (is_array($key)) {
             return $this->getMany($key, $fetch);
         }
+
         return $this->getAll($fetch)->get($key, $default);
     }
 
@@ -61,6 +64,7 @@ class Setting extends Model
                 return $this->getModelName()->pluck('value', 'key');
             });
         }
+
         return $settings;
     }
 
@@ -70,6 +74,7 @@ class Setting extends Model
             foreach ($key as $k) {
                 $this->delete($k);
             }
+
             return true;
         }
         $this->getModelName()->where('key', $key)->delete();
@@ -80,6 +85,4 @@ class Setting extends Model
     {
         return $this->getAll()->has($key);
     }
-
-
 }

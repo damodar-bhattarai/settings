@@ -2,10 +2,8 @@
 
 namespace DamodarBhattarai\Settings;
 
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Cache;
 use DamodarBhattarai\Settings\Facades\Setting;
-
+use Illuminate\Support\ServiceProvider;
 
 class SettingsServiceProvider extends ServiceProvider
 {
@@ -17,10 +15,10 @@ class SettingsServiceProvider extends ServiceProvider
     protected function publishMigrations()
     {
         if ($this->app->runningInConsole()) {
-            if (!class_exists('CreateSettingsTable')) {
+            if (! class_exists('CreateSettingsTable')) {
                 $this->publishes([
-                    __DIR__ . '/../database/migrations/create_settings_table.php.stub' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_settings_table.php'),
-                    __DIR__ . '/../database/seeders/SettingsSeeder.php.stub' => database_path('seeders/SettingsSeeder.php'),
+                    __DIR__.'/../database/migrations/create_settings_table.php.stub' => database_path('migrations/'.date('Y_m_d_His', time()).'_create_settings_table.php'),
+                    __DIR__.'/../database/seeders/SettingsSeeder.php.stub' => database_path('seeders/SettingsSeeder.php'),
                 ], 'migrations');
             }
         }
@@ -34,7 +32,6 @@ class SettingsServiceProvider extends ServiceProvider
         });
 
         // load migrations
-        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
     }
-
 }
