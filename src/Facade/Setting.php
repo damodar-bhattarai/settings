@@ -1,6 +1,6 @@
 <?php
 
-namespace DamodarBhattarai\Settings\Facades;
+namespace DamodarBhattarai\Settings\Facade;
 
 use Illuminate\Support\Facades\Facade;
 
