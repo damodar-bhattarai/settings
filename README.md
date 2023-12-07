@@ -1,5 +1,5 @@
 
-# Settings
+# Settings (Laravel Settings Package) (DB Based)
 
 Store general settings like website name, logo url, contacts in the database easily.
 Everything is cached, so no extra query is done.
