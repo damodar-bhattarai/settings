@@ -11,6 +11,14 @@
             "src/Helpers/settingsHelper.php"
         ]
     },
+    "scripts": {
+        "post-install-cmd": [
+            "DamodarBhattarai\\Settings\\Composer\\PostInstall::prompt"
+        ],
+        "post-update-cmd": [
+            "DamodarBhattarai\\Settings\\Composer\\PostInstall::prompt"
+        ]
+    },
     "extra": {
         "laravel": {
             "providers": [
