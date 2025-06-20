@@ -104,7 +104,7 @@ class Setting extends Model
     }
 
     /**
-     * Decode JSON value, handling both JSON and plain text for backward compatibility
+     * Decode JSON value, handling both JSON, arrays, and plain text for backward compatibility
      *
      * @param mixed $value
      * @param mixed $default
@@ -116,16 +116,19 @@ class Setting extends Model
             return $default;
         }
 
-        // If the value is not valid JSON, return it as is (for backward compatibility)
-        if (is_string($value) && !$this->isJson($value)) {
+        // If value is already an array, return it directly
+        if (is_array($value)) {
             return $value;
         }
 
-        // Decode JSON value
-        $decoded = json_decode($value, true);
+        // If value is a string and valid JSON, decode it
+        if (is_string($value) && $this->isJson($value)) {
+            $decoded = json_decode($value, true);
+            return (json_last_error() === JSON_ERROR_NONE) ? $decoded : $default;
+        }
 
-        // Return decoded value or default if decoding fails
-        return (json_last_error() === JSON_ERROR_NONE) ? $decoded : $default;
+        // Return non-JSON string as is for backward compatibility
+        return $value;
     }
 
     /**
