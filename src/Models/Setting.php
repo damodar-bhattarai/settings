@@ -10,6 +10,10 @@ class Setting extends Model
     protected $guarded = ['id'];
     protected $table = 'settings';
 
+    protected $casts = [
+        'value' => 'array',
+    ];
+
     public function set($key, $value = null)
     {
         if (is_array($key)) {
@@ -20,7 +24,13 @@ class Setting extends Model
             return true;
         }
 
-        $settings = $this->getModelName()->updateOrCreate(['key' => $key], ['value' => $value]);
+        // Ensure value is properly formatted for JSON storage
+        $storedValue = is_array($value) || is_object($value) ? json_encode($value) : $value;
+
+        $settings = $this->getModelName()->updateOrCreate(
+            ['key' => $key],
+            ['value' => $storedValue]
+        );
         $this->forgetCache();
 
         return $settings;
@@ -47,12 +57,27 @@ class Setting extends Model
             return $this->getMany($key, $fetch);
         }
 
-        return $this->getAll($fetch)->get($key, $default);
+        $value = $this->getAll($fetch)->get($key, $default);
+
+        // Handle backward compatibility for text values
+        if (is_string($value) && $this->isJson($value)) {
+            return json_decode($value, true);
+        }
+
+        return $value;
     }
 
     public function getMany($keys, $fetch)
     {
-        return $this->getAll($fetch)->only($keys);
+        $results = $this->getAll($fetch)->only($keys);
+
+        // Process each value for backward compatibility
+        return $results->map(function ($value) {
+            if (is_string($value) && $this->isJson($value)) {
+                return json_decode($value, true);
+            }
+            return $value;
+        })->all();
     }
 
     public function getAll($fetch = false)
@@ -65,14 +90,20 @@ class Setting extends Model
             });
         }
 
-        return $settings;
+        // Process values to ensure compatibility with text and JSON
+        return $settings->map(function ($value) {
+            if (is_string($value) && $this->isJson($value)) {
+                return json_decode($value, true);
+            }
+            return $value;
+        });
     }
 
     public function remove($key)
     {
         if (is_array($key)) {
             foreach ($key as $k) {
-                $this->delete($k);
+                $this->remove($k);
             }
 
             return true;
@@ -84,5 +115,20 @@ class Setting extends Model
     public function has($key)
     {
         return $this->getAll()->has($key);
+    }
+
+    /**
+     * Check if a string is valid JSON
+     *
+     * @param string $string
+     * @return bool
+     */
+    protected function isJson($string): bool
+    {
+        if (!is_string($string)) {
+            return false;
+        }
+        json_decode($string);
+        return json_last_error() === JSON_ERROR_NONE;
     }
 }
