@@ -10,10 +10,6 @@ class Setting extends Model
     protected $guarded = ['id'];
     protected $table = 'settings';
 
-    protected $casts = [
-        'value' => 'array',
-    ];
-
     public function set($key, $value = null)
     {
         if (is_array($key)) {
@@ -24,8 +20,8 @@ class Setting extends Model
             return true;
         }
 
-        // Ensure value is properly formatted for JSON storage
-        $storedValue = is_array($value) || is_object($value) ? json_encode($value) : $value;
+        // Encode all values as JSON
+        $storedValue = json_encode($value);
 
         $settings = $this->getModelName()->updateOrCreate(
             ['key' => $key],
@@ -59,24 +55,17 @@ class Setting extends Model
 
         $value = $this->getAll($fetch)->get($key, $default);
 
-        // Handle backward compatibility for text values
-        if (is_string($value) && $this->isJson($value)) {
-            return json_decode($value, true);
-        }
-
-        return $value;
+        // Decode JSON value, handling both new and existing data
+        return $this->decodeValue($value, $default);
     }
 
     public function getMany($keys, $fetch)
     {
         $results = $this->getAll($fetch)->only($keys);
 
-        // Process each value for backward compatibility
+        // Decode each JSON value
         return $results->map(function ($value) {
-            if (is_string($value) && $this->isJson($value)) {
-                return json_decode($value, true);
-            }
-            return $value;
+            return $this->decodeValue($value);
         })->all();
     }
 
@@ -90,12 +79,9 @@ class Setting extends Model
             });
         }
 
-        // Process values to ensure compatibility with text and JSON
+        // Decode all JSON values
         return $settings->map(function ($value) {
-            if (is_string($value) && $this->isJson($value)) {
-                return json_decode($value, true);
-            }
-            return $value;
+            return $this->decodeValue($value);
         });
     }
 
@@ -115,6 +101,31 @@ class Setting extends Model
     public function has($key)
     {
         return $this->getAll()->has($key);
+    }
+
+    /**
+     * Decode JSON value, handling both JSON and plain text for backward compatibility
+     *
+     * @param mixed $value
+     * @param mixed $default
+     * @return mixed
+     */
+    protected function decodeValue($value, $default = null)
+    {
+        if (is_null($value)) {
+            return $default;
+        }
+
+        // If the value is not valid JSON, return it as is (for backward compatibility)
+        if (is_string($value) && !$this->isJson($value)) {
+            return $value;
+        }
+
+        // Decode JSON value
+        $decoded = json_decode($value, true);
+
+        // Return decoded value or default if decoding fails
+        return (json_last_error() === JSON_ERROR_NONE) ? $decoded : $default;
     }
 
     /**
