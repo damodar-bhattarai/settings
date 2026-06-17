@@ -74,9 +74,18 @@ class Setting extends Model
         if ($fetch) {
             $settings = $this->getModelName()->pluck('value', 'key');
         } else {
-            $settings = Cache::rememberForever($this->getCacheName(), function () {
-                return $this->getModelName()->pluck('value', 'key');
+            $cached = Cache::rememberForever($this->getCacheName(), function () {
+                return $this->getModelName()->pluck('value', 'key')->all();
             });
+
+            if (! is_array($cached)) {
+                $this->forgetCache();
+
+                $cached = $this->getModelName()->pluck('value', 'key')->all();
+                Cache::forever($this->getCacheName(), $cached);
+            }
+
+            $settings = collect($cached);
         }
 
         // Decode all JSON values
@@ -139,7 +148,7 @@ class Setting extends Model
      */
     protected function isJson($string): bool
     {
-        if (!is_string($string)) {
+        if (! is_string($string)) {
             return false;
         }
         json_decode($string);
